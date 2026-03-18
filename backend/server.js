@@ -52,6 +52,12 @@ connectToDB(app);
 // setInterval(() => backupMongoDB(), backupTime);
 
 // Routes
+app.get("/", (req, res) => {
+  res.send("Hello from Node.js!");
+});
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+app.get("/favicon.png", (req, res) => res.status(204).end());
+
 app.use("/api", require("./routes/index"));
 
 // Global error handler
