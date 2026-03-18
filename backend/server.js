@@ -9,12 +9,12 @@ const { sendResponse } = require("./helperUtils/responseUtil");
 const { i18nConfig } = require("./config/i18nConfig");
 const { backupMongoDB } = require("./helperUtils/dataBaseBackup");
 const { securityMiddleware } = require("./middlewares/security");
-const { loggerMiddleware } = require("./middlewares/logger");
+// const { loggerMiddleware } = require("./middlewares/logger");
 
-const logsDir = path.join(__dirname, "logs");
-if (!fs.existsSync(logsDir)) {
-  fs.mkdirSync(logsDir);
-}
+// const logsDir = path.join(__dirname, "logs");
+// if (!fs.existsSync(logsDir)) {
+//   fs.mkdirSync(logsDir);
+// }
 
 // Express app
 const app = express();
@@ -38,7 +38,7 @@ securityMiddleware(app, {
 // i18n middleware initialization for language localization
 
 app.use(i18nConfig.init);
-app.use(loggerMiddleware);
+// app.use(loggerMiddleware);
 if (process.env.NODE_ENV != "prod") {
 }
 app.use(morgan("dev"));
