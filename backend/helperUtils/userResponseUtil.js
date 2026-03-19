@@ -1,5 +1,4 @@
 // helperUtils/userResponseUtil.js
-
 const { lang } = require("moment-timezone");
 const { convertUtcToTimezone } = require("./responseUtil");
 const { getFullImageUrl } = require("./imageHelper");
