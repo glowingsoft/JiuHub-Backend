@@ -72,7 +72,10 @@ const formatUserResponse = (
     );
   }
 
-  if (process.env.NODE_ENV === "dev" && userObject.otpInfo) {
+  if (
+    (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "prod") &&
+    userObject.otpInfo
+  ) {
     response.otpInfo = userObject.otpInfo;
   }
   if (userObject.resetToken) {
