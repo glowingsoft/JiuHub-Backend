@@ -767,6 +767,74 @@ const socialAuth = async (req, res) => {
   }
 };
 
+const guestLoin = async (req, res) => {
+  try {
+    const { deviceId, deviceType, timezone } = req.body;
+
+    const validationOptions = {
+      rawData: ["deviceId", "deviceType", "timezone"],
+    };
+    if (!validateParams(req, res, validationOptions)) {
+      return;
+    }
+
+    // if already create guest user with same device id then return that user
+    const existingGuest = await User.findOne({
+      "accountState.userType": "guest",
+    });
+
+    if (existingGuest) {
+      const token = existingGuest.generateAuthToken();
+      const response = formatUserResponse(existingGuest, token);
+      return sendResponse({
+        res,
+        statusCode: 200,
+        translationKey: "guest_login_success",
+        data: response,
+      });
+    }
+
+    // Create a new guest user
+    const guestUser = new User({
+      name: "Guest User",
+      email: "guest_user@jiuhub.com",
+      username: "guest",
+      accountState: { userType: "guest" },
+      deviceId,
+      deviceType,
+      timezone,
+    });
+
+    await guestUser.save();
+
+    // Generate a token for the guest user
+    const token = guestUser.generateAuthToken();
+
+    // Ensure toJSON method is applied to strip out sensitive data
+    const userObject = guestUser;
+
+    // Format the user response using the utility function
+    const response = formatUserResponse(userObject, token);
+
+    // Save device information
+    createOrSkipDevice(guestUser._id, deviceId, deviceType);
+
+    return sendResponse({
+      res,
+      statusCode: 201,
+      translationKey: "guest_login_success",
+      data: response,
+    });
+  } catch (error) {
+    return sendResponse({
+      res,
+      statusCode: 500,
+      translationKey: error.message,
+      error: error,
+    });
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -776,4 +844,5 @@ module.exports = {
   logout,
   deleteAccount,
   socialAuth,
+  guestLoin,
 };

@@ -10,6 +10,7 @@ const {
   logout,
   deleteAccount,
   socialAuth,
+  guestLoin
 } = require("../controllers/authController");
 const createRateLimiter = require("../helperUtils/rateLimiter");
 
@@ -27,6 +28,7 @@ const resetPasswordRateLimiter = createRateLimiter("resetPassword", 15, 15); // 
 // Apply rate limiters to routes
 router.post("/register", signupRateLimiter, register);
 router.post("/login", loginRateLimiter, login);
+
 router.post("/forgot-password", generateOtpRateLimiter, (req, res, next) => {
   req.body.type = "email";
   generateOtp(req, res, next);
@@ -52,5 +54,6 @@ router.post("/reset-password", resetPasswordRateLimiter, resetPassword);
 router.post("/logout", auth, logout);
 router.delete("/delete-account", auth, deleteAccount);
 router.post("/social-auth", socialAuth);
+router.post("/guest-login", guestLoin);
 
 module.exports = router;
